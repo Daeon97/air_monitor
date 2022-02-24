@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (airQualityContext, airQualityState) => Scaffold(
               appBar: AppBar(
                 title: Text(
-                  utils.airQualityMonitoringSystem,
+                  utils.pyloop,
                   style: TextStyle(
                     color: themeState.themeValue == utils.Theme.dark
                         ? Colors.white

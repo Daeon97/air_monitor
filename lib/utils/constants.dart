@@ -32,7 +32,6 @@ const severeColor = Color(0xFFCF0000);
 
 const emptyString = '';
 const threeDots = '...';
-// const degreeCelcius = '';
 const exclamation = '!';
 
 const settings = 'Settings';
@@ -46,7 +45,7 @@ const pMTwoPointFive = 'PM 2.5';
 const pMTen = 'PM 10';
 const humidity = 'Humidity';
 const temperature = 'Temperature';
-const airQualityMonitoringSystem = 'Air Quality Monitoring System';
+const pyloop = 'Pyloop';
 const ofHundred = 'of 100';
 const ofFiveHundred = 'of 500';
 const good = 'Good';
