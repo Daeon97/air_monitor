@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 // endpoints
 const baseUrl = 'https://api.thingspeak.com';
 final path =
-    '/channels/${dotenv.env['CHANNEL_ID']}/fields/1.json?api_key=${dotenv.env['API_KEY']!}&results=5';
+    '/channels/${dotenv.env['CHANNEL_ID']}/feeds.json?api_key=${dotenv.env['API_KEY']!}&results=1';
 
 // routes
 const homeScreenRoute = '/homeScreen';
@@ -49,3 +49,9 @@ const temperature = 'Temperature';
 const airQualityMonitoringSystem = 'Air Quality Monitoring System';
 const ofHundred = 'of 100';
 const ofFiveHundred = 'of 500';
+const good = 'Good';
+const satisfactory = 'Satisfactory';
+const moderate = 'Moderate';
+const poor = 'Poor';
+const veryPoor = 'Very Poor';
+const severe = 'Severe';

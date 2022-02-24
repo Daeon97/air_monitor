@@ -405,6 +405,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                             width: utils.nil,
                                             height: utils.nil,
                                           ),
+                                    airQualityState is blocs.GotAirQualityState
+                                        ? Text(
+                                            _pMTwoPointFiveRemark(
+                                              pMTwoPointFiveValue:
+                                                  airQualityState.airQuality
+                                                      .pMTwoPointFive,
+                                            ).toUpperCase(),
+                                            style: TextStyle(
+                                              fontSize: utils.padding +
+                                                  utils.smallPadding,
+                                              color: _pMTwoPointFiveColor(
+                                                  pMTwoPointFiveValue:
+                                                      airQualityState.airQuality
+                                                          .pMTwoPointFive),
+                                            ),
+                                          )
+                                        : const SizedBox(
+                                            width: utils.nil,
+                                            height: utils.nil,
+                                          ),
                                   ],
                                 ),
                         ],
@@ -631,6 +651,22 @@ class _HomeScreenState extends State<HomeScreen> {
       return utils.veryPoorColor;
     } else {
       return utils.severeColor;
+    }
+  }
+
+  String _pMTwoPointFiveRemark({required double pMTwoPointFiveValue}) {
+    if (pMTwoPointFiveValue >= 0 && pMTwoPointFiveValue < 30) {
+      return utils.good;
+    } else if (pMTwoPointFiveValue >= 30 && pMTwoPointFiveValue < 60) {
+      return utils.satisfactory;
+    } else if (pMTwoPointFiveValue >= 60 && pMTwoPointFiveValue < 90) {
+      return utils.moderate;
+    } else if (pMTwoPointFiveValue >= 90 && pMTwoPointFiveValue < 120) {
+      return utils.poor;
+    } else if (pMTwoPointFiveValue >= 120 && pMTwoPointFiveValue < 250) {
+      return utils.veryPoor;
+    } else {
+      return utils.severe;
     }
   }
 }
