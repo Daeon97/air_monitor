@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 // endpoints
 const baseUrl = 'https://api.thingspeak.com';
 final path =
-    '/channels/${dotenv.env['CHANNEL_ID']}/fields/1.json?api_key=${dotenv.env['API_KEY']!}&results=1';
+    '/channels/${dotenv.env['CHANNEL_ID']}/fields/1.json?api_key=${dotenv.env['API_KEY']!}&results=5';
 
 // routes
 const homeScreenRoute = '/homeScreen';
@@ -23,6 +23,12 @@ const fiveHundred = 500;
 
 const lightModeBaseColor = Colors.blue;
 const darkModeBaseColor = Color(0xFF121212);
+const goodColor = Color(0xFF00D852);
+const satisfactoryColor = Color(0xFF4AFE4A);
+const moderateColor = Color(0xFFFADA00);
+const poorColor = Color(0xFFFFA100);
+const veryPoorColor = Color(0xFFFF0000);
+const severeColor = Color(0xFFCF0000);
 
 const emptyString = '';
 const threeDots = '...';

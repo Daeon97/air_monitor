@@ -1,9 +1,9 @@
 class AirQuality {
-  final int pMOne;
-  final int pMTwoPointFive;
-  final int pMTen;
+  final double pMOne;
+  final double pMTwoPointFive;
+  final double pMTen;
   final double humidity;
-  final int temperature;
+  final double temperature;
 
   const AirQuality({
     required this.pMOne,
@@ -13,12 +13,13 @@ class AirQuality {
     required this.temperature,
   });
 
-  factory AirQuality.fromJson({required Map<String, dynamic> json}) =>
-      const AirQuality(
-        pMOne: 475, // of 500
-        pMTwoPointFive: 150, // of 500
-        pMTen: 365, // of 500
-        humidity: 22.8, // of 100
-        temperature: 79, // of 100
-      );
+  factory AirQuality.fromJson({required Map<String, dynamic> json}) {
+    return AirQuality(
+      pMOne: double.parse(json['feeds'][2]['field1']), // of 500
+      pMTwoPointFive: double.parse(json['feeds'][3]['field1']), // of 500
+      pMTen: double.parse(json['feeds'][4]['field1']), // of 500
+      humidity: double.parse(json['feeds'][1]['field1']), // of 100
+      temperature: double.parse(json['feeds'][0]['field1']), // of 100
+    );
+  }
 }

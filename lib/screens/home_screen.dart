@@ -74,6 +74,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 actions: [
                   IconButton(
                     icon: const Icon(
+                      Icons.refresh,
+                    ),
+                    onPressed: () {
+                      BlocProvider.of<blocs.AirQualityBloc>(context).add(
+                        const blocs.GetAirQualityEvent(),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(
                       Icons.settings,
                     ),
                     onPressed: () {
@@ -118,24 +128,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 airQualityState
                                         is blocs.FailedToGetAirQualityState
-                                    ? IconButton(
-                                        splashRadius: utils.veryLargePadding,
-                                        icon: Icon(
-                                          Icons.refresh,
-                                          size: utils.largePadding +
-                                              utils.padding,
+                                    ? Text(
+                                        utils.exclamation,
+                                        style: TextStyle(
                                           color: themeState.themeValue ==
                                                   utils.Theme.dark
                                               ? Colors.white
                                               : utils.lightModeBaseColor,
+                                          fontSize: utils.largePadding +
+                                              utils.padding,
                                         ),
-                                        onPressed: () {
-                                          // BlocProvider.of<blocs.AirQualityBloc>(
-                                          //         context)
-                                          //     .add(
-                                          //   const blocs.GetAirQualityEvent(),
-                                          // );
-                                        },
                                       )
                                     : Column(
                                         mainAxisAlignment:
@@ -206,8 +208,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     value: airQualityState
                                             is blocs.GotAirQualityState
                                         ? (airQualityState
-                                                .airQuality.pMTwoPointFive /
-                                            utils.fiveHundred.toDouble())
+                                                .airQuality.temperature /
+                                            utils.hundred.toDouble())
                                         : airQualityState is blocs
                                                 .FailedToGetAirQualityState
                                             ? utils.hundred.toDouble()
@@ -221,24 +223,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 airQualityState
                                         is blocs.FailedToGetAirQualityState
-                                    ? IconButton(
-                                        splashRadius: utils.veryLargePadding,
-                                        icon: Icon(
-                                          Icons.refresh,
-                                          size: utils.largePadding +
-                                              utils.padding,
+                                    ? Text(
+                                        utils.exclamation,
+                                        style: TextStyle(
                                           color: themeState.themeValue ==
                                                   utils.Theme.dark
                                               ? Colors.white
                                               : utils.lightModeBaseColor,
+                                          fontSize: utils.largePadding +
+                                              utils.padding,
                                         ),
-                                        onPressed: () {
-                                          // BlocProvider.of<blocs.AirQualityBloc>(
-                                          //         context)
-                                          //     .add(
-                                          //   const blocs.GetAirQualityEvent(),
-                                          // );
-                                        },
                                       )
                                     : Column(
                                         mainAxisAlignment:
@@ -247,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           airQualityState
                                                   is blocs.GotAirQualityState
                                               ? Text(
-                                                  utils.pMTwoPointFive
+                                                  utils.temperature
                                                       .toUpperCase(),
                                                   style: TextStyle(
                                                     color: themeState
@@ -265,8 +259,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Text(
                                             airQualityState
                                                     is blocs.GotAirQualityState
-                                                ? (airQualityState.airQuality
-                                                        .pMTwoPointFive)
+                                                ? (airQualityState
+                                                        .airQuality.temperature)
                                                     .toString()
                                                 : utils.threeDots,
                                             style: TextStyle(
@@ -280,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           airQualityState
                                                   is blocs.GotAirQualityState
                                               ? Text(
-                                                  utils.ofFiveHundred,
+                                                  utils.ofHundred,
                                                   style: TextStyle(
                                                     color: themeState
                                                                 .themeValue ==
@@ -316,18 +310,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                 utils.veryLargePadding,
                             child: CircularProgressIndicator(
                               value: airQualityState is blocs.GotAirQualityState
-                                  ? (airQualityState.airQuality.temperature
-                                          .toDouble() /
-                                      utils.hundred.toDouble())
+                                  ? (airQualityState.airQuality.pMTwoPointFive /
+                                      utils.fiveHundred.toDouble())
                                   : airQualityState
                                           is blocs.FailedToGetAirQualityState
                                       ? utils.hundred.toDouble()
                                       : null,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                themeState.themeValue == utils.Theme.dark
-                                    ? Colors.white
-                                    : utils.lightModeBaseColor,
-                              ),
+                              valueColor: airQualityState
+                                      is blocs.GotAirQualityState
+                                  ? AlwaysStoppedAnimation<Color>(
+                                      _pMTwoPointFiveColor(
+                                          pMTwoPointFiveValue: airQualityState
+                                              .airQuality.pMTwoPointFive),
+                                    )
+                                  : AlwaysStoppedAnimation<Color>(
+                                      themeState.themeValue == utils.Theme.dark
+                                          ? Colors.white
+                                          : utils.lightModeBaseColor,
+                                    ),
                             ),
                           ),
                           airQualityState is blocs.FailedToGetAirQualityState
@@ -342,11 +342,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         : utils.lightModeBaseColor,
                                   ),
                                   onPressed: () {
-                                    // BlocProvider.of<blocs.AirQualityBloc>(
-                                    //         context)
-                                    //     .add(
-                                    //   const blocs.GetAirQualityEvent(),
-                                    // );
+                                    BlocProvider.of<blocs.AirQualityBloc>(
+                                            context)
+                                        .add(
+                                      const blocs.GetAirQualityEvent(),
+                                    );
                                   },
                                 )
                               : Column(
@@ -354,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     airQualityState is blocs.GotAirQualityState
                                         ? Text(
-                                            utils.temperature.toUpperCase(),
+                                            utils.pMTwoPointFive.toUpperCase(),
                                             style: TextStyle(
                                               fontSize: utils.padding +
                                                   utils.smallPadding,
@@ -372,20 +372,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                       airQualityState
                                               is blocs.GotAirQualityState
                                           ? (airQualityState
-                                                  .airQuality.temperature)
+                                                  .airQuality.pMTwoPointFive)
                                               .toString()
                                           : utils.threeDots,
                                       style: TextStyle(
                                         fontSize: utils.extraLargePadding,
-                                        color: themeState.themeValue ==
-                                                utils.Theme.dark
-                                            ? Colors.white
-                                            : utils.lightModeBaseColor,
+                                        color: airQualityState
+                                                is blocs.GotAirQualityState
+                                            ? _pMTwoPointFiveColor(
+                                                pMTwoPointFiveValue:
+                                                    airQualityState.airQuality
+                                                        .pMTwoPointFive)
+                                            : themeState.themeValue ==
+                                                    utils.Theme.dark
+                                                ? Colors.white
+                                                : utils.lightModeBaseColor,
                                       ),
                                     ),
                                     airQualityState is blocs.GotAirQualityState
                                         ? Text(
-                                            utils.ofHundred,
+                                            utils.ofFiveHundred,
                                             style: TextStyle(
                                               fontSize: utils.padding +
                                                   utils.smallPadding,
@@ -433,24 +439,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 airQualityState
                                         is blocs.FailedToGetAirQualityState
-                                    ? IconButton(
-                                        splashRadius: utils.veryLargePadding,
-                                        icon: Icon(
-                                          Icons.refresh,
-                                          size: utils.largePadding +
-                                              utils.padding,
+                                    ? Text(
+                                        utils.exclamation,
+                                        style: TextStyle(
                                           color: themeState.themeValue ==
                                                   utils.Theme.dark
                                               ? Colors.white
                                               : utils.lightModeBaseColor,
+                                          fontSize: utils.largePadding +
+                                              utils.padding,
                                         ),
-                                        onPressed: () {
-                                          // BlocProvider.of<blocs.AirQualityBloc>(
-                                          //         context)
-                                          //     .add(
-                                          //   const blocs.GetAirQualityEvent(),
-                                          // );
-                                        },
                                       )
                                     : Column(
                                         mainAxisAlignment:
@@ -535,24 +533,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 airQualityState
                                         is blocs.FailedToGetAirQualityState
-                                    ? IconButton(
-                                        splashRadius: utils.veryLargePadding,
-                                        icon: Icon(
-                                          Icons.refresh,
-                                          size: utils.largePadding +
-                                              utils.padding,
+                                    ? Text(
+                                        utils.exclamation,
+                                        style: TextStyle(
                                           color: themeState.themeValue ==
                                                   utils.Theme.dark
                                               ? Colors.white
                                               : utils.lightModeBaseColor,
+                                          fontSize: utils.largePadding +
+                                              utils.padding,
                                         ),
-                                        onPressed: () {
-                                          // BlocProvider.of<blocs.AirQualityBloc>(
-                                          //         context)
-                                          //     .add(
-                                          //   const blocs.GetAirQualityEvent(),
-                                          // );
-                                        },
                                       )
                                     : Column(
                                         mainAxisAlignment:
@@ -626,5 +616,21 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
     );
+  }
+
+  Color _pMTwoPointFiveColor({required double pMTwoPointFiveValue}) {
+    if (pMTwoPointFiveValue >= 0 && pMTwoPointFiveValue < 30) {
+      return utils.goodColor;
+    } else if (pMTwoPointFiveValue >= 30 && pMTwoPointFiveValue < 60) {
+      return utils.satisfactoryColor;
+    } else if (pMTwoPointFiveValue >= 60 && pMTwoPointFiveValue < 90) {
+      return utils.moderateColor;
+    } else if (pMTwoPointFiveValue >= 90 && pMTwoPointFiveValue < 120) {
+      return utils.poorColor;
+    } else if (pMTwoPointFiveValue >= 120 && pMTwoPointFiveValue < 250) {
+      return utils.veryPoorColor;
+    } else {
+      return utils.severeColor;
+    }
   }
 }

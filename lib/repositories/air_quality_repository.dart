@@ -13,15 +13,9 @@ class AirQualityRepository {
         );
 
   Future<models.AirQuality> getAirQuality() async {
-    // Response<Map<String, dynamic>> response = await _dio.get(
-    //   utils.path,
-    // );
-    // return models.AirQuality.fromJson(json: response.data!);
-
-    return models.AirQuality.fromJson(
-      json: {
-        'testing': 'testing...',
-      },
+    Response<Map<String, dynamic>> response = await _dio.get(
+      utils.path,
     );
+    return models.AirQuality.fromJson(json: response.data!);
   }
 }

@@ -20,9 +20,6 @@ class AirQualityBloc extends Bloc<AirQualityEvent, AirQualityState> {
         try {
           models.AirQuality airQuality =
               await airQualityRepository.getAirQuality();
-          await Future.delayed(
-            const Duration(seconds: 5),
-          );
           emit(
             GotAirQualityState(
               airQuality: airQuality,
