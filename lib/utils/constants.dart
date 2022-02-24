@@ -19,13 +19,14 @@ const smallPadding = 8.0;
 const nil = 0.0;
 
 const hundred = 100;
+const fiveHundred = 500;
 
 const lightModeBaseColor = Colors.blue;
 const darkModeBaseColor = Color(0xFF121212);
 
 const emptyString = '';
 const threeDots = '...';
-const percentage = '%';
+// const degreeCelcius = '';
 const exclamation = '!';
 
 const settings = 'Settings';
@@ -40,3 +41,5 @@ const pMTen = 'PM 10';
 const humidity = 'Humidity';
 const temperature = 'Temperature';
 const airQualityMonitoringSystem = 'Air Quality Monitoring System';
+const ofHundred = 'of 100';
+const ofFiveHundred = 'of 500';

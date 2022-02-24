@@ -17,16 +17,16 @@ class _HomeScreenState extends State<HomeScreen> {
     BlocProvider.of<blocs.ThemeBloc>(context).add(
       const blocs.GetThemeEvent(),
     );
-    BlocProvider.of<blocs.WaterLevelBloc>(context).add(
-      const blocs.GetWaterLevelEvent(),
+    BlocProvider.of<blocs.AirQualityBloc>(context).add(
+      const blocs.GetAirQualityEvent(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<blocs.WaterLevelBloc, blocs.WaterLevelState>(
-      listener: (waterLevelContext, waterLevelState) {
-        if (waterLevelState is blocs.FailedToGetWaterLevelState) {
+    return BlocListener<blocs.AirQualityBloc, blocs.AirQualityState>(
+      listener: (airQualityContext, airQualityState) {
+        if (airQualityState is blocs.FailedToGetAirQualityState) {
           showModalBottomSheet(
             context: context,
             builder: (context) => Padding(
@@ -60,8 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: BlocBuilder<blocs.ThemeBloc, blocs.ThemeState>(
         builder: (themeContext, themeState) {
-          return BlocBuilder<blocs.WaterLevelBloc, blocs.WaterLevelState>(
-            builder: (waterLevelContext, waterLevelState) => Scaffold(
+          return BlocBuilder<blocs.AirQualityBloc, blocs.AirQualityState>(
+            builder: (airQualityContext, airQualityState) => Scaffold(
               appBar: AppBar(
                 title: Text(
                   utils.airQualityMonitoringSystem,
@@ -88,47 +88,225 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      Stack(
-                        alignment: Alignment.center,
+                      const SizedBox(
+                        height: utils.padding,
+                      ),
+                      Row(
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                waterLevelState is blocs.GotWaterLevelState
-                                    ? (waterLevelState.waterLevel.level)
-                                            .toString() +
-                                        utils.percentage
-                                    : waterLevelState
-                                            is blocs.FailedToGetWaterLevelState
-                                        ? utils.exclamation
-                                        : utils.threeDots,
-                                style: TextStyle(
-                                  fontSize: utils.extraLargePadding,
-                                  color:
+                          Expanded(
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                SizedBox(
+                                  width: utils.extraLargePadding,
+                                  height: utils.extraLargePadding,
+                                  child: CircularProgressIndicator(
+                                    value: airQualityState
+                                            is blocs.GotAirQualityState
+                                        ? (airQualityState.airQuality.pMOne /
+                                            utils.fiveHundred.toDouble())
+                                        : airQualityState is blocs
+                                                .FailedToGetAirQualityState
+                                            ? utils.hundred.toDouble()
+                                            : null,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
                                       themeState.themeValue == utils.Theme.dark
                                           ? Colors.white
                                           : utils.lightModeBaseColor,
-                                ),
-                              ),
-                              waterLevelState is blocs.GotWaterLevelState
-                                  ? Text(
-                                      utils.liquidLevel,
-                                      style: TextStyle(
-                                        fontSize:
-                                            utils.padding + utils.smallPadding,
-                                        color: themeState.themeValue ==
-                                                utils.Theme.dark
-                                            ? Colors.white
-                                            : utils.lightModeBaseColor,
-                                      ),
-                                    )
-                                  : const SizedBox(
-                                      width: utils.nil,
-                                      height: utils.nil,
                                     ),
-                            ],
+                                  ),
+                                ),
+                                airQualityState
+                                        is blocs.FailedToGetAirQualityState
+                                    ? IconButton(
+                                        splashRadius: utils.veryLargePadding,
+                                        icon: Icon(
+                                          Icons.refresh,
+                                          size: utils.largePadding +
+                                              utils.padding,
+                                          color: themeState.themeValue ==
+                                                  utils.Theme.dark
+                                              ? Colors.white
+                                              : utils.lightModeBaseColor,
+                                        ),
+                                        onPressed: () {
+                                          // BlocProvider.of<blocs.AirQualityBloc>(
+                                          //         context)
+                                          //     .add(
+                                          //   const blocs.GetAirQualityEvent(),
+                                          // );
+                                        },
+                                      )
+                                    : Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          airQualityState
+                                                  is blocs.GotAirQualityState
+                                              ? Text(
+                                                  utils.pMOne.toUpperCase(),
+                                                  style: TextStyle(
+                                                    color: themeState
+                                                                .themeValue ==
+                                                            utils.Theme.dark
+                                                        ? Colors.white
+                                                        : utils
+                                                            .lightModeBaseColor,
+                                                  ),
+                                                )
+                                              : const SizedBox(
+                                                  width: utils.nil,
+                                                  height: utils.nil,
+                                                ),
+                                          Text(
+                                            airQualityState
+                                                    is blocs.GotAirQualityState
+                                                ? (airQualityState
+                                                        .airQuality.pMOne)
+                                                    .toString()
+                                                : utils.threeDots,
+                                            style: TextStyle(
+                                              fontSize: utils.largePadding,
+                                              color: themeState.themeValue ==
+                                                      utils.Theme.dark
+                                                  ? Colors.white
+                                                  : utils.lightModeBaseColor,
+                                            ),
+                                          ),
+                                          airQualityState
+                                                  is blocs.GotAirQualityState
+                                              ? Text(
+                                                  utils.ofFiveHundred,
+                                                  style: TextStyle(
+                                                    color: themeState
+                                                                .themeValue ==
+                                                            utils.Theme.dark
+                                                        ? Colors.white
+                                                        : utils
+                                                            .lightModeBaseColor,
+                                                  ),
+                                                )
+                                              : const SizedBox(
+                                                  width: utils.nil,
+                                                  height: utils.nil,
+                                                ),
+                                        ],
+                                      ),
+                              ],
+                            ),
                           ),
+                          Expanded(
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                SizedBox(
+                                  width: utils.extraLargePadding,
+                                  height: utils.extraLargePadding,
+                                  child: CircularProgressIndicator(
+                                    value: airQualityState
+                                            is blocs.GotAirQualityState
+                                        ? (airQualityState
+                                                .airQuality.pMTwoPointFive /
+                                            utils.fiveHundred.toDouble())
+                                        : airQualityState is blocs
+                                                .FailedToGetAirQualityState
+                                            ? utils.hundred.toDouble()
+                                            : null,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      themeState.themeValue == utils.Theme.dark
+                                          ? Colors.white
+                                          : utils.lightModeBaseColor,
+                                    ),
+                                  ),
+                                ),
+                                airQualityState
+                                        is blocs.FailedToGetAirQualityState
+                                    ? IconButton(
+                                        splashRadius: utils.veryLargePadding,
+                                        icon: Icon(
+                                          Icons.refresh,
+                                          size: utils.largePadding +
+                                              utils.padding,
+                                          color: themeState.themeValue ==
+                                                  utils.Theme.dark
+                                              ? Colors.white
+                                              : utils.lightModeBaseColor,
+                                        ),
+                                        onPressed: () {
+                                          // BlocProvider.of<blocs.AirQualityBloc>(
+                                          //         context)
+                                          //     .add(
+                                          //   const blocs.GetAirQualityEvent(),
+                                          // );
+                                        },
+                                      )
+                                    : Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          airQualityState
+                                                  is blocs.GotAirQualityState
+                                              ? Text(
+                                                  utils.pMTwoPointFive
+                                                      .toUpperCase(),
+                                                  style: TextStyle(
+                                                    color: themeState
+                                                                .themeValue ==
+                                                            utils.Theme.dark
+                                                        ? Colors.white
+                                                        : utils
+                                                            .lightModeBaseColor,
+                                                  ),
+                                                )
+                                              : const SizedBox(
+                                                  width: utils.nil,
+                                                  height: utils.nil,
+                                                ),
+                                          Text(
+                                            airQualityState
+                                                    is blocs.GotAirQualityState
+                                                ? (airQualityState.airQuality
+                                                        .pMTwoPointFive)
+                                                    .toString()
+                                                : utils.threeDots,
+                                            style: TextStyle(
+                                              fontSize: utils.largePadding,
+                                              color: themeState.themeValue ==
+                                                      utils.Theme.dark
+                                                  ? Colors.white
+                                                  : utils.lightModeBaseColor,
+                                            ),
+                                          ),
+                                          airQualityState
+                                                  is blocs.GotAirQualityState
+                                              ? Text(
+                                                  utils.ofFiveHundred,
+                                                  style: TextStyle(
+                                                    color: themeState
+                                                                .themeValue ==
+                                                            utils.Theme.dark
+                                                        ? Colors.white
+                                                        : utils
+                                                            .lightModeBaseColor,
+                                                  ),
+                                                )
+                                              : const SizedBox(
+                                                  width: utils.nil,
+                                                  height: utils.nil,
+                                                ),
+                                        ],
+                                      ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: utils.largePadding,
+                      ),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
                           SizedBox(
                             width: utils.extraLargePadding +
                                 utils.extraLargePadding +
@@ -137,12 +315,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 utils.extraLargePadding +
                                 utils.veryLargePadding,
                             child: CircularProgressIndicator(
-                              value: waterLevelState is blocs.GotWaterLevelState
-                                  ? (waterLevelState.waterLevel.level
+                              value: airQualityState is blocs.GotAirQualityState
+                                  ? (airQualityState.airQuality.temperature
                                           .toDouble() /
                                       utils.hundred.toDouble())
-                                  : waterLevelState
-                                          is blocs.FailedToGetWaterLevelState
+                                  : airQualityState
+                                          is blocs.FailedToGetAirQualityState
                                       ? utils.hundred.toDouble()
                                       : null,
                               valueColor: AlwaysStoppedAnimation<Color>(
@@ -152,25 +330,292 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
+                          airQualityState is blocs.FailedToGetAirQualityState
+                              ? IconButton(
+                                  splashRadius: utils.veryLargePadding,
+                                  icon: Icon(
+                                    Icons.refresh,
+                                    size: utils.largePadding + utils.padding,
+                                    color: themeState.themeValue ==
+                                            utils.Theme.dark
+                                        ? Colors.white
+                                        : utils.lightModeBaseColor,
+                                  ),
+                                  onPressed: () {
+                                    // BlocProvider.of<blocs.AirQualityBloc>(
+                                    //         context)
+                                    //     .add(
+                                    //   const blocs.GetAirQualityEvent(),
+                                    // );
+                                  },
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    airQualityState is blocs.GotAirQualityState
+                                        ? Text(
+                                            utils.temperature.toUpperCase(),
+                                            style: TextStyle(
+                                              fontSize: utils.padding +
+                                                  utils.smallPadding,
+                                              color: themeState.themeValue ==
+                                                      utils.Theme.dark
+                                                  ? Colors.white
+                                                  : utils.lightModeBaseColor,
+                                            ),
+                                          )
+                                        : const SizedBox(
+                                            width: utils.nil,
+                                            height: utils.nil,
+                                          ),
+                                    Text(
+                                      airQualityState
+                                              is blocs.GotAirQualityState
+                                          ? (airQualityState
+                                                  .airQuality.temperature)
+                                              .toString()
+                                          : utils.threeDots,
+                                      style: TextStyle(
+                                        fontSize: utils.extraLargePadding,
+                                        color: themeState.themeValue ==
+                                                utils.Theme.dark
+                                            ? Colors.white
+                                            : utils.lightModeBaseColor,
+                                      ),
+                                    ),
+                                    airQualityState is blocs.GotAirQualityState
+                                        ? Text(
+                                            utils.ofHundred,
+                                            style: TextStyle(
+                                              fontSize: utils.padding +
+                                                  utils.smallPadding,
+                                              color: themeState.themeValue ==
+                                                      utils.Theme.dark
+                                                  ? Colors.white
+                                                  : utils.lightModeBaseColor,
+                                            ),
+                                          )
+                                        : const SizedBox(
+                                            width: utils.nil,
+                                            height: utils.nil,
+                                          ),
+                                  ],
+                                ),
                         ],
                       ),
                       const SizedBox(
                         height: utils.largePadding,
                       ),
-                      IconButton(
-                        splashRadius: utils.veryLargePadding,
-                        icon: Icon(
-                          Icons.refresh,
-                          size: utils.largePadding + utils.padding,
-                          color: themeState.themeValue == utils.Theme.dark
-                              ? Colors.white
-                              : utils.lightModeBaseColor,
-                        ),
-                        onPressed: () {
-                          // BlocProvider.of<blocs.WaterLevelBloc>(context).add(
-                          //   const blocs.GetWaterLevelEvent(),
-                          // );
-                        },
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                SizedBox(
+                                  width: utils.extraLargePadding,
+                                  height: utils.extraLargePadding,
+                                  child: CircularProgressIndicator(
+                                    value: airQualityState
+                                            is blocs.GotAirQualityState
+                                        ? (airQualityState.airQuality.pMTen /
+                                            utils.fiveHundred.toDouble())
+                                        : airQualityState is blocs
+                                                .FailedToGetAirQualityState
+                                            ? utils.hundred.toDouble()
+                                            : null,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      themeState.themeValue == utils.Theme.dark
+                                          ? Colors.white
+                                          : utils.lightModeBaseColor,
+                                    ),
+                                  ),
+                                ),
+                                airQualityState
+                                        is blocs.FailedToGetAirQualityState
+                                    ? IconButton(
+                                        splashRadius: utils.veryLargePadding,
+                                        icon: Icon(
+                                          Icons.refresh,
+                                          size: utils.largePadding +
+                                              utils.padding,
+                                          color: themeState.themeValue ==
+                                                  utils.Theme.dark
+                                              ? Colors.white
+                                              : utils.lightModeBaseColor,
+                                        ),
+                                        onPressed: () {
+                                          // BlocProvider.of<blocs.AirQualityBloc>(
+                                          //         context)
+                                          //     .add(
+                                          //   const blocs.GetAirQualityEvent(),
+                                          // );
+                                        },
+                                      )
+                                    : Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          airQualityState
+                                                  is blocs.GotAirQualityState
+                                              ? Text(
+                                                  utils.pMTen.toUpperCase(),
+                                                  style: TextStyle(
+                                                    color: themeState
+                                                                .themeValue ==
+                                                            utils.Theme.dark
+                                                        ? Colors.white
+                                                        : utils
+                                                            .lightModeBaseColor,
+                                                  ),
+                                                )
+                                              : const SizedBox(
+                                                  width: utils.nil,
+                                                  height: utils.nil,
+                                                ),
+                                          Text(
+                                            airQualityState
+                                                    is blocs.GotAirQualityState
+                                                ? (airQualityState
+                                                        .airQuality.pMTen)
+                                                    .toString()
+                                                : utils.threeDots,
+                                            style: TextStyle(
+                                              fontSize: utils.largePadding,
+                                              color: themeState.themeValue ==
+                                                      utils.Theme.dark
+                                                  ? Colors.white
+                                                  : utils.lightModeBaseColor,
+                                            ),
+                                          ),
+                                          airQualityState
+                                                  is blocs.GotAirQualityState
+                                              ? Text(
+                                                  utils.ofFiveHundred,
+                                                  style: TextStyle(
+                                                    color: themeState
+                                                                .themeValue ==
+                                                            utils.Theme.dark
+                                                        ? Colors.white
+                                                        : utils
+                                                            .lightModeBaseColor,
+                                                  ),
+                                                )
+                                              : const SizedBox(
+                                                  width: utils.nil,
+                                                  height: utils.nil,
+                                                ),
+                                        ],
+                                      ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                SizedBox(
+                                  width: utils.extraLargePadding,
+                                  height: utils.extraLargePadding,
+                                  child: CircularProgressIndicator(
+                                    value: airQualityState
+                                            is blocs.GotAirQualityState
+                                        ? (airQualityState.airQuality.humidity /
+                                            utils.hundred.toDouble())
+                                        : airQualityState is blocs
+                                                .FailedToGetAirQualityState
+                                            ? utils.hundred.toDouble()
+                                            : null,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      themeState.themeValue == utils.Theme.dark
+                                          ? Colors.white
+                                          : utils.lightModeBaseColor,
+                                    ),
+                                  ),
+                                ),
+                                airQualityState
+                                        is blocs.FailedToGetAirQualityState
+                                    ? IconButton(
+                                        splashRadius: utils.veryLargePadding,
+                                        icon: Icon(
+                                          Icons.refresh,
+                                          size: utils.largePadding +
+                                              utils.padding,
+                                          color: themeState.themeValue ==
+                                                  utils.Theme.dark
+                                              ? Colors.white
+                                              : utils.lightModeBaseColor,
+                                        ),
+                                        onPressed: () {
+                                          // BlocProvider.of<blocs.AirQualityBloc>(
+                                          //         context)
+                                          //     .add(
+                                          //   const blocs.GetAirQualityEvent(),
+                                          // );
+                                        },
+                                      )
+                                    : Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          airQualityState
+                                                  is blocs.GotAirQualityState
+                                              ? Text(
+                                                  utils.humidity.toUpperCase(),
+                                                  style: TextStyle(
+                                                    color: themeState
+                                                                .themeValue ==
+                                                            utils.Theme.dark
+                                                        ? Colors.white
+                                                        : utils
+                                                            .lightModeBaseColor,
+                                                  ),
+                                                )
+                                              : const SizedBox(
+                                                  width: utils.nil,
+                                                  height: utils.nil,
+                                                ),
+                                          Text(
+                                            airQualityState
+                                                    is blocs.GotAirQualityState
+                                                ? (airQualityState
+                                                        .airQuality.humidity)
+                                                    .toString()
+                                                : utils.threeDots,
+                                            style: TextStyle(
+                                              fontSize: utils.largePadding,
+                                              color: themeState.themeValue ==
+                                                      utils.Theme.dark
+                                                  ? Colors.white
+                                                  : utils.lightModeBaseColor,
+                                            ),
+                                          ),
+                                          airQualityState
+                                                  is blocs.GotAirQualityState
+                                              ? Text(
+                                                  utils.ofHundred,
+                                                  style: TextStyle(
+                                                    color: themeState
+                                                                .themeValue ==
+                                                            utils.Theme.dark
+                                                        ? Colors.white
+                                                        : utils
+                                                            .lightModeBaseColor,
+                                                  ),
+                                                )
+                                              : const SizedBox(
+                                                  width: utils.nil,
+                                                  height: utils.nil,
+                                                ),
+                                        ],
+                                      ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: utils.padding,
                       )
                     ],
                   ),
